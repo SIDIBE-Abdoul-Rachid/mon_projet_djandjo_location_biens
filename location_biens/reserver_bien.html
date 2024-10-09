@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Réserver {{ bien.titre }}</title>
+</head>
+<body>
+    <h1>Réserver {{ bien.titre }}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Réserver</button>
+    </form>
+</body>
+</html>

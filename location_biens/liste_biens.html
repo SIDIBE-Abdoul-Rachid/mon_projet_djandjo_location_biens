@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Biens</title>
+</head>
+<body>
+    <h1>Liste des Biens</h1>
+    <ul>
+        {% for bien in biens %}
+            <li>{{ bien.titre }} - {{ bien.prix }} FCFA</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
