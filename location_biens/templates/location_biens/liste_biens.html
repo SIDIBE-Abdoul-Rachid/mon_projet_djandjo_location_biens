@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Biens</title>
 </head>
 <body>
-    <h1>Liste des Biens</h1>
+    <h1>Liste des Biens disponibles</h1>
     <ul>
         {% for bien in biens %}
-            <li>{{ bien.titre }} - {{ bien.prix }} FCFA</li>
+            <li>
+                <a href="{% url 'bien_detail' bien.id %}">{{ bien.titre }}</a> - {{ bien.prix_par_jour }} Franc CFA par jour
+            </li>
+        {% empty %}
+            <li>Aucun bien disponible pour le moment.</li>
         {% endfor %}
     </ul>
 </body>
