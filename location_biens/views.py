@@ -1,20 +1,14 @@
-from django.shortcuts import render
 from django.shortcuts import render, redirect
-from .models import Bien  # Assure-toi que Bien est bien importé
+from .models import Bien  # Assure-toi que Bien est bien défini dans models.py
 from .forms import ReservationForm  # Import du formulaire de réservation
-
-
-from django.shortcuts import redirect
-from django.shortcuts import render
 
 def home(request):
     return render(request, 'home.html')
 
-
 def liste_biens(request):
     # Logique pour récupérer la liste des biens
-    return render(request, 'location_biens/liste_biens.html')
-
+    biens = Bien.objects.all()  # Récupère tous les biens disponibles
+    return render(request, 'location_biens/liste_biens.html', {'biens': biens})
 
 def reserver_bien(request, bien_id):
     bien = Bien.objects.get(id=bien_id)
@@ -28,4 +22,3 @@ def reserver_bien(request, bien_id):
     else:
         form = ReservationForm()
     return render(request, 'location_biens/reserver_bien.html', {'form': form, 'bien': bien})
-
