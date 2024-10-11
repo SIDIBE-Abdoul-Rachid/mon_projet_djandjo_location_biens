@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django import forms
 
 # Modèle pour les biens à louer
 class Bien(models.Model):
@@ -17,14 +18,13 @@ class Bien(models.Model):
 # Modèle pour les réservations
 class Reservation(models.Model):
     locataire = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reservations_as_locataire')
-    utilisateur = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reservations_as_utilisateur', default=1) # Référence à l'utilisateur qui réserve
+    utilisateur = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reservations_as_utilisateur', default=1)  # Référence à l'utilisateur qui réserve
     bien = models.ForeignKey(Bien, on_delete=models.CASCADE)
     date_debut = models.DateField()
     date_fin = models.DateField()
     montant_total = models.DecimalField(max_digits=10, decimal_places=2)
     confirme = models.BooleanField(default=False)
     date_reservation = models.DateTimeField(default=timezone.now)  # Valeur par défaut à maintenant
- 
 
     def __str__(self):
         return f"Réservation de {self.locataire.username} pour {self.bien.titre}"
@@ -38,3 +38,8 @@ class Avis(models.Model):
 
     def __str__(self):
         return f"Avis de {self.utilisateur.username} sur {self.bien.titre}"
+
+class ReservationForm(forms.ModelForm):
+    class Meta:
+        model = Reservation
+        fields = ['date_debut', 'date_fin', 'montant_total']
