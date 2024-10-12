@@ -2,6 +2,10 @@ from django.urls import path
 from .views import liste_biens, reserver_bien, home , bien_detail
 from django.contrib.auth import views as auth_views
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
+from .views import ajouter_bien
+
 
 
 urlpatterns = [
@@ -12,5 +16,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='location_biens/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('signup/', views.signup, name='signup'),
+    path('ajouter/', ajouter_bien, name='ajouter_bien'),  # Ajoutez cette ligne
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
