@@ -1,16 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détails du Bien</title>
+    <title>{{ bien.titre }} - Détails</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .navbar {
+            background-color: #007bff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand, .nav-link {
+            color: white;
+            font-weight: 500;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffc107;
+        }
+        .property-header {
+            background-color: #007bff;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+        .property-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .property-details {
+            padding: 50px 0;
+        }
+        .property-img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .property-description {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .property-description h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .property-description p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .btn-reservation {
+            background-color: #28a745;
+            color: white;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .btn-reservation:hover {
+            background-color: #218838;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+        .footer a {
+            color: #ffc107;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ bien.titre }}</h1>
-    <p>Description: {{ bien.description }}</p>
-    <p>Prix par jour: {{ bien.prix_par_jour }} Franc CFA</p>
-    <p>Propriétaire: {{ bien.proprietaire.username }}</p>
 
-    <a href="{% url 'reserver_bien' bien.id %}">Réserver ce bien</a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Location de Biens</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Biens disponibles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-outline-light" href="{% url 'login' %}">Se Connecter</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Property Header -->
+    <div class="property-header">
+        <div class="container">
+            <h1>{{ bien.titre }}</h1>
+        </div>
+    </div>
+
+    <!-- Property Details Section -->
+    <section class="property-details">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <img src="{{ bien.image.url }}" alt="{{ bien.titre }}" class="property-img">
+                </div>
+                <div class="col-md-4">
+                    <div class="property-description">
+                        <h2>Détails du Bien</h2>
+                        <p><strong>Description :</strong> {{ bien.description }}</p>
+                        <p><strong>Prix par jour :</strong> {{ bien.prix_par_jour }} Franc CFA</p>
+                        <p><strong>Propriétaire :</strong> {{ bien.proprietaire.username }}</p>
+                        <p><strong>Disponibilité :</strong> Du {{ bien.date_debut }} au {{ bien.date_fin }}</p>
+                        <a href="{% url 'reserver_bien' bien.id %}" class="btn btn-reservation btn-lg btn-block mt-4"><i class="fas fa-calendar-check"></i> Réserver ce bien</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Location de Biens. Tous droits réservés. <a href="#">Mentions légales</a>.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

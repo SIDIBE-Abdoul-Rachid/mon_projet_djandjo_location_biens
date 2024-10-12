@@ -20,11 +20,11 @@ class Reservation(models.Model):
     locataire = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reservations_as_locataire')
     utilisateur = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reservations_as_utilisateur', default=1)  # Référence à l'utilisateur qui réserve
     bien = models.ForeignKey(Bien, on_delete=models.CASCADE)
-    date_debut = models.DateField()
-    date_fin = models.DateField()
+    date_debut = models.DateField(null=False, blank=False)
+    date_fin = models.DateField(null=False, blank=False)
+    date_reservation = models.DateField(editable=False)
     montant_total = models.DecimalField(max_digits=10, decimal_places=2)
     confirme = models.BooleanField(default=False)
-    date_reservation = models.DateTimeField(default=timezone.now)  # Valeur par défaut à maintenant
 
     def __str__(self):
         return f"Réservation de {self.locataire.username} pour {self.bien.titre}"

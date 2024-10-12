@@ -6,10 +6,68 @@
 </head>
 <body>
     <h1>Réserver {{ bien.titre }}</h1>
-    <form method="POST">
+    <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        
+        <p><strong>Locataire:</strong> {{ request.user.username }}</p>
+        <p><strong>Bien:</strong> {{ bien.nom }}</p>
+        <p><strong>Prix par jour:</strong> {{ bien.prix_par_jour }} €</p>
+        
+        <!-- Champ Date de début -->
+        <label for="id_date_debut">Date début:</label>
+        {{ form.date_debut }}
+        
+        <!-- Champ Date de fin -->
+        <label for="id_date_fin">Date fin:</label>
+        {{ form.date_fin }}
+        
+        <!-- Montant total (calculé en fonction des dates) -->
+        <p><strong>Montant total:</strong> <span id="montant_total">0</span> €</p>
+        
+        <!-- Bouton de confirmation -->
         <button type="submit">Réserver</button>
     </form>
+    
+    <a href="{% url 'liste_biens' %}">Retour à la liste des biens</a>
+
+    <!-- Script JavaScript pour le calcul du montant total -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Récupération des éléments HTML
+            const dateDebutInput = document.getElementById('id_date_debut');
+            const dateFinInput = document.getElementById('id_date_fin');
+            const montantTotalElement = document.getElementById('montant_total');
+            const prixParJour = parseFloat("{{ bien.prix_par_jour|floatformat:2|safe }}");
+    
+            // Fonction pour formater les dates en objets Date correctement
+            function parseDate(input) {
+                const parts = input.split('/');
+                // Format: [day, month, year]
+                return new Date(parts[2], parts[1] - 1, parts[0]); // mois commence à 0 en JS
+            }
+    
+            // Fonction pour calculer la différence en jours entre deux dates
+            function calculerMontantTotal() {
+                const dateDebut = parseDate(dateDebutInput.value);
+                const dateFin = parseDate(dateFinInput.value);
+    
+                // Vérification que les dates sont valides et que la date de fin est après la date de début
+                if (dateDebut && dateFin && dateFin >= dateDebut) {
+                    const duree = (dateFin - dateDebut) / (1000 * 60 * 60 * 24) + 1;  // +1 pour inclure la journée de début
+                    const montantTotal = duree * prixParJour;
+                    montantTotalElement.textContent = montantTotal.toFixed(2);  // Afficher le montant avec 2 décimales
+                } else if (dateFin < dateDebut) {
+                    montantTotalElement.textContent = 'Erreur: La date de fin est avant la date de début';
+                } else {
+                    montantTotalElement.textContent = '0';
+                }
+            }
+    
+            // Ajouter des écouteurs d'événement sur les champs de date
+            dateDebutInput.addEventListener('change', calculerMontantTotal);
+            dateFinInput.addEventListener('change', calculerMontantTotal);
+        });
+    </script>
+    
 </body>
 </html>
