@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord</title>
+</head>
+<body>
+    <h1>Bienvenue sur votre tableau de bord, {{ user.username }} !</h1>
+
+    <h2>Vos biens à louer</h2>
+    <ul>
+        {% if biens %}
+            {% for bien in biens %}
+                <li>{{ bien.titre }} - {{ bien.prix_par_jour }} Franc CFA</li>
+            {% endfor %}
+        {% else %}
+            <li>Vous n'avez aucun bien en location pour le moment.</li>
+        {% endif %}
+    </ul>
+
+    <h2>Vos réservations</h2>
+    <ul>
+        {% if reservations %}
+            {% for reservation in reservations %}
+                <li>Bien: {{ reservation.bien.titre }} | Date: {{ reservation.date_debut }} - {{ reservation.date_fin }}</li>
+            {% endfor %}
+        {% else %}
+            <li>Vous n'avez aucune réservation pour le moment.</li>
+        {% endif %}
+    </ul>
+
+    <a href="{% url 'ajouter_bien' %}">Ajouter un bien</a>
+    <br>
+    <form action="{% url 'logout' %}" method="POST" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Déconnexion</button>
+    </form>
+    
+</body>
+</html>

@@ -4,7 +4,24 @@ from .forms import ReservationForm, SignUpForm, BienForm, UserProfileForm
 from django.utils import timezone
 import logging
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            # Redirection vers le tableau de bord après la connexion
+            return redirect('dashboard')  # 'dashboard' est le nom de l'URL vers ton tableau de bord
+        else:
+            # Si l'authentification échoue, on renvoie l'utilisateur sur la page de connexion
+            return render(request, 'login.html', {'error': 'Nom d’utilisateur ou mot de passe incorrect.'})
+    
+    return render(request, 'login.html')
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +37,7 @@ def profile_view(request):
 
     return render(request, 'profile.html', {'form': form})
 
+@login_required
 def dashboard_view(request):
     user_reservations = Reservation.objects.filter(locataire=request.user)
     user_biens = Bien.objects.filter(proprietaire=request.user)
@@ -104,3 +122,6 @@ def signup(request):
         form = SignUpForm()
     
     return render(request, 'location_biens/signup.html', {'form': form})
+
+def reservation_succes(request):
+    return render(request, 'location_biens/reservation_succes.html')
