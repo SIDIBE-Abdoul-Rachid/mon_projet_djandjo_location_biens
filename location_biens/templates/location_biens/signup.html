@@ -92,6 +92,9 @@
             color: #007bff;
             text-decoration: underline;
         }
+        .alert {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -100,7 +103,24 @@
         <div class="signup-box">
             <h2>Créer un compte</h2>
             <p>Rejoignez-nous dès aujourd'hui et découvrez les meilleures offres de location !</p>
-            <form method="post">
+
+            <!-- Affichage des messages d'erreur -->
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'signup' %}">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="username">Nom d'utilisateur :</label>

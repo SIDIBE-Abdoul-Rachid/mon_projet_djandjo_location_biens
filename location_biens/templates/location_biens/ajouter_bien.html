@@ -1,20 +1,41 @@
-<form method="post" enctype="multipart/form-data">
+<!-- Formulaire d'ajout de bien immobilier amélioré et harmonisé -->
+<form method="post" enctype="multipart/form-data" class="p-4 bg-white shadow-sm rounded">
     {% csrf_token %}
+    <h2 class="mb-4 text-center">Ajouter un nouveau bien immobilier</h2>
+    
     <div class="form-group">
-        <label for="titre">Titre :</label>
-        <input type="text" id="titre" name="titre" class="form-control" required>
+        <label for="titre" class="font-weight-bold">Titre du bien :</label>
+        <input type="text" id="titre" name="titre" class="form-control" placeholder="Entrez le titre du bien" required>
     </div>
+
     <div class="form-group">
-        <label for="description">Description :</label>
-        <textarea id="description" name="description" class="form-control" required></textarea>
+        <label for="description" class="font-weight-bold">Description :</label>
+        <textarea id="description" name="description" class="form-control" rows="4" placeholder="Décrivez le bien" required></textarea>
     </div>
+
     <div class="form-group">
-        <label for="prix_par_jour">Prix par jour :</label>
-        <input type="number" id="prix_par_jour" name="prix_par_jour" class="form-control" required>
+        <label for="prix_par_jour" class="font-weight-bold">Prix par jour (en F CFA) :</label>
+        <input type="number" id="prix_par_jour" name="prix_par_jour" class="form-control" placeholder="Montant par jour" required>
     </div>
+
     <div class="form-group">
-        <label for="image">Image :</label>
-        <input type="file" id="image" name="image" class="form-control" accept="image/*" required>
+        <label for="image" class="font-weight-bold">Télécharger une image :</label>
+        <div class="custom-file">
+            <input type="file" id="image" name="image" class="custom-file-input" accept="image/*" required>
+            <label class="custom-file-label" for="image">Choisir une image...</label>
+        </div>
     </div>
-    <button type="submit" class="btn btn-success">Ajouter le bien</button>
+
+    <button type="submit" class="btn btn-primary btn-block mt-4">
+        <i class="fas fa-plus-circle"></i> Ajouter le bien
+    </button>
 </form>
+
+<!-- Script to display file name in the custom file input -->
+<script>
+    document.querySelector('.custom-file-input').addEventListener('change', function(e){
+        var fileName = document.getElementById("image").files[0].name;
+        var nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
+    });
+</script>

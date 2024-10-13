@@ -59,6 +59,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'mon_projet.urls'
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

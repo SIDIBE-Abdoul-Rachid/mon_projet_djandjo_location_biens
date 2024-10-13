@@ -23,6 +23,7 @@ class Bien(models.Model):
     date_creation = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='biens/', null=True, blank=True)  # Champ pour l'image
     est_publié = models.BooleanField(default=True)  # Champ pour gérer la publication
+    proprietaire = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.titre

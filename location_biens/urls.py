@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from .views import ajouter_bien
 from .views import reserver_bien, reservation_succes
+from .views import edit_profile
 
 
 urlpatterns = [
@@ -19,5 +20,6 @@ urlpatterns = [
     path('ajouter/', ajouter_bien, name='ajouter_bien'),  # Ajoutez cette ligne
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('reservation/succes/', reservation_succes, name='reservation_succes'),
+    path('edit-profile/', edit_profile, name='edit_profile'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -5,6 +5,7 @@ from django.utils import timezone
 import logging
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
+from .forms import UserUpdateForm
 from django.contrib import messages
 
 def login_view(request):
@@ -65,16 +66,19 @@ def bien_detail(request, bien_id):
     bien = get_object_or_404(Bien, id=bien_id)
     return render(request, 'location_biens/bien_detail.html', {'bien': bien})
 
+@login_required
 def ajouter_bien(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = BienForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('liste_biens')
+            bien = form.save(commit=False)
+            bien.proprietaire = request.user  # Associer le bien à l'utilisateur connecté
+            bien.save()
+            return redirect('dashboard')  # Rediriger vers la liste des biens ou une autre vue valide
     else:
         form = BienForm()
-    
-    return render(request, 'ajouter_bien.html', {'form': form})
+
+    return render(request, 'location_biens/ajouter_bien.html', {'form': form})
 
 @login_required(login_url='login')
 def reserver_bien(request, bien_id):
@@ -125,3 +129,16 @@ def signup(request):
 
 def reservation_succes(request):
     return render(request, 'location_biens/reservation_succes.html')
+
+@login_required
+def edit_profile(request):
+    user = request.user
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')  # Rediriger vers le tableau de bord après modification
+    else:
+        form = UserUpdateForm(instance=user)
+    
+    return render(request, 'location_biens/edit_profile.html', {'form': form})

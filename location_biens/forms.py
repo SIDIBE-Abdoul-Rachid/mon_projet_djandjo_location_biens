@@ -14,9 +14,11 @@ class ReservationForm(forms.ModelForm):
         }
 
 class SignUpForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2')
 
 class BienForm(forms.ModelForm):
     class Meta:
@@ -27,3 +29,8 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['bio', 'phone_number', 'address']
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
