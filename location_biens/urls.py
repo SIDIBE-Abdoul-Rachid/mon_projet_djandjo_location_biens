@@ -11,7 +11,7 @@ from .views import reserver_bien, reservation_succes
 urlpatterns = [
     path('biens/', liste_biens, name='liste_biens'),
     path('biens/<int:bien_id>/reserver/', reserver_bien, name='reserver_bien'),
-    path('', home, name='home'),  # Utilisez la vue home pour la page d'accueil
+    path('', home, name='home'),
     path('biens/<int:bien_id>/', bien_detail, name='bien_detail'),
     path('login/', auth_views.LoginView.as_view(template_name='location_biens/login.html', redirect_authenticated_user=True, next_page='dashboard'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
