@@ -1,13 +1,21 @@
 from django.urls import path
-from .views import liste_biens, reserver_bien, home , bien_detail
-from django.contrib.auth import views as auth_views
-from . import views
-from django.conf.urls.static import static
 from django.conf import settings
-from .views import ajouter_bien
-from .views import reserver_bien, reservation_succes
-from .views import edit_profile
-
+from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from .views import (
+    ajouter_bien,
+    ajouter_avis,
+    bien_detail,
+    dashboard_view,
+    edit_profile,
+    home,
+    liste_biens,
+    modifier_avis,
+    reservation_succes,
+    reserver_bien,
+    supprimer_avis,
+    signup,
+)
 
 urlpatterns = [
     path('biens/', liste_biens, name='liste_biens'),
@@ -16,10 +24,12 @@ urlpatterns = [
     path('biens/<int:bien_id>/', bien_detail, name='bien_detail'),
     path('login/', auth_views.LoginView.as_view(template_name='location_biens/login.html', redirect_authenticated_user=True, next_page='dashboard'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
-    path('signup/', views.signup, name='signup'),
-    path('ajouter/', ajouter_bien, name='ajouter_bien'),  # Ajoutez cette ligne
-    path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('signup/', signup, name='signup'),
+    path('ajouter/', ajouter_bien, name='ajouter_bien'),  # Route pour ajouter un bien
+    path('dashboard/', dashboard_view, name='dashboard'),
     path('reservation/succes/', reservation_succes, name='reservation_succes'),
     path('edit-profile/', edit_profile, name='edit_profile'),
-
+    path('bien/<int:bien_id>/ajouter-avis/', ajouter_avis, name='ajouter_avis'),
+    path('avis/modifier/<int:avis_id>/', modifier_avis, name='modifier_avis'),
+    path('avis/supprimer/<int:avis_id>/', supprimer_avis, name='supprimer_avis'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

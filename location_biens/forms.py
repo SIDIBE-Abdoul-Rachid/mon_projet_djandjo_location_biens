@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Reservation, Bien, UserProfile
-from .models import Avis
+from .models import Reservation, Bien, UserProfile, Avis
+from .models import Review  # Assurez-vous que le chemin est correct
+
+
 
 class ReservationForm(forms.ModelForm):
     class Meta:
@@ -10,8 +12,8 @@ class ReservationForm(forms.ModelForm):
         exclude = ['date_reservation']
         fields = ['date_debut', 'date_fin']
         widgets = {
-            'date_debut': forms.DateInput(attrs={'type': 'date'}),
-            'date_fin': forms.DateInput(attrs={'type': 'date'}),
+            'date_debut': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'date_fin': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
 
 class SignUpForm(UserCreationForm):
@@ -36,7 +38,18 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
 
-class ReviewForm(forms.ModelForm):
+class AvisForm(forms.ModelForm):
     class Meta:
         model = Avis
         fields = ['note', 'commentaire']
+    
+    def clean_note(self):
+        note = self.cleaned_data.get('note')
+        if note < 1 or note > 5:
+            raise forms.ValidationError("La note doit être comprise entre 1 et 5.")
+        return note
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['content', 'rating']

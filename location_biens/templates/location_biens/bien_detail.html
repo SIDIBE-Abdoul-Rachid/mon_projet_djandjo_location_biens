@@ -105,6 +105,13 @@
         .review p {
             margin: 0;
         }
+        .avis-form {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -152,6 +159,28 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Avis Form Section -->
+    <section class="avis-form">
+        <div class="container">
+            <h3>Ajouter un Avis</h3>
+            <form method="post" action="{% url 'ajouter_avis' bien.id %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Soumettre l'Avis</button>
+            </form>
+            {% if form.errors %}
+                <div class="alert alert-danger mt-2">
+                    <h5>Erreurs :</h5>
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            <li>{{ field }}: {{ errors|join:", " }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
         </div>
     </section>
 

@@ -9,6 +9,7 @@ from .forms import UserUpdateForm
 from django.contrib import messages
 from .models import Avis
 from .forms import ReviewForm
+from .forms import AvisForm
 
 def login_view(request):
     if request.method == 'POST':
@@ -59,14 +60,30 @@ def liste_biens(request):
     for bien in biens:
         if not bien.image:
             # Attribuer une image par défaut si aucune image n'est associée
-            bien.image = 'location_biens\Images\images_defaut.jpeg'  # Remplacez par le chemin d'une image par défaut
+           bien.image = 'location_biens/Images/images_defaut.jpeg'
     return render(request, 'location_biens/liste_biens.html', {'biens': biens})
     
   
 
 def bien_detail(request, bien_id):
     bien = get_object_or_404(Bien, id=bien_id)
-    return render(request, 'location_biens/bien_detail.html', {'bien': bien})
+    avis = bien.avis.all()
+
+    if request.method == 'POST':
+        form = AvisForm(request.POST)
+        if form.is_valid():
+            nouveau_avis = form.save(commit=False)
+            nouveau_avis.bien = bien
+            nouveau_avis.save()
+            return redirect('bien_detail', bien_id=bien.id)
+    else:
+        form = AvisForm()
+
+    return render(request, 'location_biens/bien_detail.html', {
+        'bien': bien,
+        'avis': avis,
+        'form': form
+    })
 
 @login_required
 def ajouter_bien(request):
@@ -157,21 +174,100 @@ def verifier_disponibilite(bien, date_debut, date_fin):
     )
     return not reservations.exists()  # Retourne False si des réservations existent (pas disponible)
 
-@login_required(login_url='login')
+@login_required
 def laisser_avis(request, bien_id):
     bien = get_object_or_404(Bien, id=bien_id)
 
     # Vérifier si l'utilisateur a déjà laissé un avis
-    if Avis.objects.filter(bien=bien, utilisateur=request.user).exists():
-        return render(request, 'location_biens/avis_deja_existe.html', {'bien': bien})
+    avis_existant = Avis.objects.filter(bien=bien, utilisateur=request.user).first()
+    if avis_existant:
+        return render(request, 'location_biens/avis_deja_existe.html', {'bien': bien, 'avis': avis_existant})
 
     if request.method == 'POST':
-        form = ReviewForm(request.POST)
+        form = AvisForm(request.POST)
+        if form.is_valid():
+            avis = form.save(commit=False)
+            avis.utilisateur = request.user  # Associer l'avis à l'utilisateur connecté
+            avis.bien = bien  # Associer l'avis au bien
+            avis.save()
+            return redirect('details_bien', bien_id=bien.id)  # Rediriger vers la page de détails du bien
+    else:
+        form = AvisForm()
+
+    return render(request, 'location_biens/ajouter_avis.html', {'form': form, 'bien': bien})
+
+@login_required
+def ajouter_avis(request, bien_id):
+    bien = get_object_or_404(Bien, id=bien_id)
+    if request.method == 'POST':
+        form = AvisForm(request.POST)
+        if form.is_valid():
+            avis = form.save(commit=False)
+            avis.utilisateur = request.user  # Associer l'utilisateur connecté
+            avis.bien = bien  # Associer le bien
+            avis.save()
+            return redirect('bien_detail', bien_id=bien.id)
+    else:
+        form = AvisForm()
+    return render(request, 'location_biens/ajouter_avis.html', {'form': form, 'bien': bien})
+
+
+
+
+
+@login_required
+def gerer_avis(request, bien_id, avis_id=None):
+    bien = get_object_or_404(Bien, id=bien_id)
+    avis_existant = None
+
+    if avis_id:
+        avis_existant = get_object_or_404(Avis, id=avis_id, utilisateur=request.user)
+
+    if request.method == 'POST':
+        form = AvisForm(request.POST, instance=avis_existant)
         if form.is_valid():
             avis = form.save(commit=False)
             avis.bien = bien
             avis.utilisateur = request.user
             avis.save()
-            return redirect('liste_biens')  # Rediriger vers la liste des biens après soumission
+            return redirect('details_bien', bien_id=bien.id)  # Rediriger vers la page de détail du bien
+    else:
+        form = AvisForm(instance=avis_existant)
+
+    return render(request, 'location_biens/ajouter_avis.html', {'form': form, 'bien': bien})
+
+
+
+@login_required
+def modifier_avis(request, avis_id):
+    avis = get_object_or_404(Avis, id=avis_id, utilisateur=request.user)
+
+    if request.method == 'POST':
+        form = AvisForm(request.POST, instance=avis)
+        if form.is_valid():
+            form.save()
+            return redirect('details_bien', bien_id=avis.bien.id)  # Rediriger vers la page de détail du bien
+    else:
+        form = AvisForm(instance=avis)
+
+    return render(request, 'modifier_avis.html', {'form': form, 'avis': avis})
+
+@login_required
+def supprimer_avis(request, avis_id):
+    avis = get_object_or_404(Avis, id=avis_id, utilisateur=request.user)
+
+    if request.method == 'POST':
+        avis.delete()
+        return redirect('details_bien', bien_id=avis.bien.id)  # Rediriger vers la page de détail du bien
+
+    return render(request, 'supprimer_avis.html', {'avis': avis})
+
+def review_create(request):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Rediriger ou afficher un message de succès
     else:
         form = ReviewForm()
+    return render(request, 'your_template.html', {'form': form})

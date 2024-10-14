@@ -23,13 +23,15 @@ class Bien(models.Model):
     date_creation = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='biens/', null=True, blank=True)  # Champ pour l'image
     est_publié = models.BooleanField(default=True)  # Champ pour gérer la publication
-    proprietaire = models.ForeignKey(User, on_delete=models.CASCADE)
     date_debut_disponibilite = models.DateField(null=True, blank=True)  
     date_fin_disponibilite = models.DateField(default="2024-01-01")
-
+    nom = models.CharField(max_length=100, default="Nom par défaut")
+    prix = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return self.titre
+    pass
+
 
 # Modèle pour les réservations
 class Reservation(models.Model):
@@ -55,19 +57,29 @@ class Reservation(models.Model):
     def __str__(self):
         return f"Réservation de {self.locataire.username} pour {self.bien.titre}"
 
-# Modèle pour les avis
 class Avis(models.Model):
-    bien = models.ForeignKey(Bien, on_delete=models.CASCADE, related_name='avis')
-    utilisateur = models.ForeignKey(User, on_delete=models.CASCADE)
-    note = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)])
-    commentaire = models.TextField()
+    bien = models.ForeignKey(Bien, related_name='avis', on_delete=models.CASCADE)
+    utilisateur = models.ForeignKey(User, on_delete=models.CASCADE)  # Associe l'utilisateur
+    note = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)], verbose_name="Note (1-5)")
+    commentaire = models.TextField(max_length=1000, verbose_name="Commentaire", help_text="Votre avis sur ce bien (max 1000 caractères).")
+    date_creation = models.DateTimeField(auto_now_add=True)
+    nom_utilisateur = models.CharField(max_length=100, default="Anonyme")
 
     def clean(self):
-        if self.note < 1 or self.note > 5:
-            raise ValidationError("La note doit être comprise entre 1 et 5.")
+        # La validation de l'utilisateur est gérée dans la vue, donc pas nécessaire ici
+        pass
+
+    class Meta:
+        verbose_name_plural = "Avis"
+        ordering = ['-date_creation']  # Afficher les avis les plus récents en premier
 
     def __str__(self):
-        return f"Avis de {self.utilisateur.username} sur {self.bien.titre}"
+        return f"Avis de {self.utilisateur.username} sur {self.bien}"
+
+    
+class Meta:
+        verbose_name_plural = "Avis"
+        ordering = ['-date_creation']  # Afficher les avis les plus récents en premier
 
 class ReservationForm(forms.ModelForm):
     class Meta:
@@ -81,3 +93,10 @@ class ReservationForm(forms.ModelForm):
 class ReservationForm(forms.Form):
     date_debut = forms.DateField(widget=forms.SelectDateWidget)
     date_fin = forms.DateField(widget=forms.SelectDateWidget)
+
+class Review(models.Model):
+    content = models.TextField()  # Exemple de champ pour le contenu de l'avis
+    rating = models.IntegerField()  # Exemple de champ pour la note
+
+    def __str__(self):
+        return self.content  # Retourne le contenu de l'avis

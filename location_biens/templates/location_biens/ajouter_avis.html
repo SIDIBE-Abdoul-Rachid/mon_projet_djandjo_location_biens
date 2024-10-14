@@ -1,0 +1,14 @@
+<form method="post" action="{% url 'ajouter_avis' bien_id=bien.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- Affiche le formulaire -->
+
+    {% for field in form %}
+        {% if field.errors %}
+            <div class="error">
+                {{ field.label }}: {{ field.errors|join:", " }}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    <button type="submit">Ajouter Avis</button>
+</form>

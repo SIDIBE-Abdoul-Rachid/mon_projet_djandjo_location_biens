@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supprimer Avis</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h2>Êtes-vous sûr de vouloir supprimer cet avis ?</h2>
+        <p><strong>{{ avis.commentaire }}</strong></p>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Supprimer l'avis</button>
+        </form>
+        <a href="{% url 'details_bien' avis.bien.id %}" class="btn btn-secondary">Annuler</a>
+    </div>
+</body>
+</html>
