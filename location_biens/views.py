@@ -213,8 +213,6 @@ def ajouter_avis(request, bien_id):
 
 
 
-
-
 @login_required
 def gerer_avis(request, bien_id, avis_id=None):
     bien = get_object_or_404(Bien, id=bien_id)

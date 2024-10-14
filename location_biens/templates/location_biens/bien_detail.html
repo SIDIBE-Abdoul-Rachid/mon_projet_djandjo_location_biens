@@ -91,19 +91,12 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .review-section h3 {
-            margin-bottom: 20px;
-        }
         .review {
             margin-bottom: 15px;
             padding: 10px;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .review:last-child {
-            border-bottom: none;
-        }
-        .review p {
-            margin: 0;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background-color: #f8f9fa;
         }
         .avis-form {
             margin-top: 30px;
@@ -188,14 +181,18 @@
     <section class="review-section">
         <div class="container">
             <h3>Avis des utilisateurs</h3>
-            {% for avis in bien.avis_set.all %}
-            <div class="review">
-                <p><strong>{{ avis.auteur.username }} :</strong> {{ avis.commentaire }}</p>
-                <p class="text-muted">{{ avis.date | date:"d M Y" }}</p>
-            </div>
-            {% empty %}
-            <p>Aucun avis pour ce bien.</p>
-            {% endfor %}
+            <ul class="list-unstyled">
+                {% for a in avis %}
+                    <li class="review">
+                        <strong>{{ a.nom_utilisateur }}:</strong>
+                        <p>Note: {{ a.note }}</p>
+                        <p>{{ a.commentaire }}</p>
+                        <p class="text-muted">Date: {{ a.date_creation }}</p>
+                    </li>
+                {% empty %}
+                    <li>Aucun avis pour ce bien.</li>
+                {% endfor %}
+            </ul>
         </div>
     </section>
 
