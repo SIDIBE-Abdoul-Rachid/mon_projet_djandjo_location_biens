@@ -24,6 +24,9 @@ class Bien(models.Model):
     image = models.ImageField(upload_to='biens/', null=True, blank=True)  # Champ pour l'image
     est_publié = models.BooleanField(default=True)  # Champ pour gérer la publication
     proprietaire = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_debut_disponibilite = models.DateField(null=True, blank=True)  
+    date_fin_disponibilite = models.DateField(default="2024-01-01")
+
 
     def __str__(self):
         return self.titre
@@ -74,3 +77,7 @@ class ReservationForm(forms.ModelForm):
             'date_debut': forms.DateInput(attrs={'type': 'date'}),
             'date_fin': forms.DateInput(attrs={'type': 'date'}),
         }
+
+class ReservationForm(forms.Form):
+    date_debut = forms.DateField(widget=forms.SelectDateWidget)
+    date_fin = forms.DateField(widget=forms.SelectDateWidget)

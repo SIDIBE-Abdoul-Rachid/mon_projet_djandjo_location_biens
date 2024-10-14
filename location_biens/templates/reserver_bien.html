@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Réserver {{ bien.titre }}</title>
 </head>
 <body>
@@ -39,11 +40,11 @@
             const montantTotalElement = document.getElementById('montant_total');
             const prixParJour = parseFloat("{{ bien.prix_par_jour|floatformat:2|safe }}");
     
-            // Fonction pour formater les dates en objets Date correctement
+            // Fonction pour formater les dates en objets Date correctement (format attendu: yyyy-mm-dd)
             function parseDate(input) {
-                const parts = input.split('/');
-                // Format: [day, month, year]
-                return new Date(parts[2], parts[1] - 1, parts[0]); // mois commence à 0 en JS
+                if (!input) return null;
+                const parts = input.split('-'); // Format: [year, month, day]
+                return new Date(parts[0], parts[1] - 1, parts[2]); // mois commence à 0 en JS
             }
     
             // Fonction pour calculer la différence en jours entre deux dates
@@ -56,7 +57,7 @@
                     const duree = (dateFin - dateDebut) / (1000 * 60 * 60 * 24) + 1;  // +1 pour inclure la journée de début
                     const montantTotal = duree * prixParJour;
                     montantTotalElement.textContent = montantTotal.toFixed(2);  // Afficher le montant avec 2 décimales
-                } else if (dateFin < dateDebut) {
+                } else if (dateFin && dateDebut && dateFin < dateDebut) {
                     montantTotalElement.textContent = 'Erreur: La date de fin est avant la date de début';
                 } else {
                     montantTotalElement.textContent = '0';

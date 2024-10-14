@@ -84,6 +84,27 @@
         .footer a:hover {
             color: #fff;
         }
+        .review-section {
+            margin-top: 50px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .review-section h3 {
+            margin-bottom: 20px;
+        }
+        .review {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .review:last-child {
+            border-bottom: none;
+        }
+        .review p {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -131,6 +152,21 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="review-section">
+        <div class="container">
+            <h3>Avis des utilisateurs</h3>
+            {% for avis in bien.avis_set.all %}
+            <div class="review">
+                <p><strong>{{ avis.auteur.username }} :</strong> {{ avis.commentaire }}</p>
+                <p class="text-muted">{{ avis.date | date:"d M Y" }}</p>
+            </div>
+            {% empty %}
+            <p>Aucun avis pour ce bien.</p>
+            {% endfor %}
         </div>
     </section>
 

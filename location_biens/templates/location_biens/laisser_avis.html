@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Laisser un avis pour {{ bien.titre }}</title>
+</head>
+<body>
+    <h1>Laisser un avis pour {{ bien.titre }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_note">Note:</label>
+        {{ form.note }}
+
+        <label for="id_commentaire">Commentaire:</label>
+        {{ form.commentaire }}
+
+        <button type="submit">Soumettre l'avis</button>
+    </form>
+    <a href="{% url 'liste_biens' %}">Retour à la liste des biens</a>
+</body>
+</html>

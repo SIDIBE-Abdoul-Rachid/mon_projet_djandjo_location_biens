@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from .forms import UserUpdateForm
 from django.contrib import messages
+from .models import Avis
+from .forms import ReviewForm
 
 def login_view(request):
     if request.method == 'POST':
@@ -94,11 +96,15 @@ def reserver_bien(request, bien_id):
             
             date_debut = reservation.date_debut
             date_fin = reservation.date_fin
-            
+
+            # Vérification de la disponibilité
             if date_debut and date_fin:
                 duree = (date_fin - date_debut).days + 1
                 if duree > 0:
-                    reservation.montant_total = duree * bien.prix_par_jour
+                    if verifier_disponibilite(bien, date_debut, date_fin):
+                        reservation.montant_total = duree * bien.prix_par_jour
+                    else:
+                        form.add_error(None, "Ce bien n'est pas disponible aux dates sélectionnées.")
                 else:
                     form.add_error('date_fin', 'La date de fin doit être postérieure à la date de début.')
             else:
@@ -142,3 +148,30 @@ def edit_profile(request):
         form = UserUpdateForm(instance=user)
     
     return render(request, 'location_biens/edit_profile.html', {'form': form})
+
+def verifier_disponibilite(bien, date_debut, date_fin):
+    reservations = Reservation.objects.filter(
+        bien=bien,
+        date_debut__lt=date_fin,  # Le début d'une autre réservation est avant la fin de celle-ci
+        date_fin__gt=date_debut    # La fin d'une autre réservation est après le début de celle-ci
+    )
+    return not reservations.exists()  # Retourne False si des réservations existent (pas disponible)
+
+@login_required(login_url='login')
+def laisser_avis(request, bien_id):
+    bien = get_object_or_404(Bien, id=bien_id)
+
+    # Vérifier si l'utilisateur a déjà laissé un avis
+    if Avis.objects.filter(bien=bien, utilisateur=request.user).exists():
+        return render(request, 'location_biens/avis_deja_existe.html', {'bien': bien})
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            avis = form.save(commit=False)
+            avis.bien = bien
+            avis.utilisateur = request.user
+            avis.save()
+            return redirect('liste_biens')  # Rediriger vers la liste des biens après soumission
+    else:
+        form = ReviewForm()
