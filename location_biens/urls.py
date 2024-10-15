@@ -26,7 +26,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='location_biens/login.html', redirect_authenticated_user=True, next_page='dashboard'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('signup/', signup, name='signup'),
-    path('ajouter/', ajouter_bien, name='ajouter_bien'),  # Route pour ajouter un bien
+    path('ajouter/', ajouter_bien, name='ajouter_bien'),
     path('dashboard/', dashboard_view, name='dashboard'),
     path('reservation/succes/', reservation_succes, name='reservation_succes'),
     path('edit-profile/', edit_profile, name='edit_profile'),

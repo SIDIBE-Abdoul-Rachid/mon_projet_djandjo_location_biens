@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Reservation, Bien, UserProfile, Avis
-from .models import Review  # Assurez-vous que le chemin est correct
+from .models import Review 
 
 
 

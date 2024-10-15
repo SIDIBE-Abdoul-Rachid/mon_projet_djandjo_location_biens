@@ -95,8 +95,8 @@ class ReservationForm(forms.Form):
     date_fin = forms.DateField(widget=forms.SelectDateWidget)
 
 class Review(models.Model):
-    content = models.TextField()  # Exemple de champ pour le contenu de l'avis
-    rating = models.IntegerField()  # Exemple de champ pour la note
+    content = models.TextField()  # champ pour le contenu de l'avis
+    rating = models.IntegerField()  # champ pour la note
 
     def __str__(self):
         return self.content  # Retourne le contenu de l'avis

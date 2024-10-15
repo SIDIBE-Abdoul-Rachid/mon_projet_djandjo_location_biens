@@ -18,10 +18,10 @@ LOGIN_REDIRECT_URL = 'dashboard'
 STATIC_URL = '/static/'
 
 
-# settings.py
+
 PAYPAL_CLIENT_ID = "AWMNCU2Dc57bdToV3rujdPpeqhkn_HkR3K3KmuRFhyRNcRJzaCoUqcUMjiHFyUhOF4Lk1M2RbasthlfU"
 PAYPAL_CLIENT_SECRET = "EJKgIDdY8AB8GIrFgAtZyDYsrRgUOYb1qh2h_dM5pKnlrEzO2Dtqip47U80UIuPhviAqpelKtflXo8mN"
-PAYPAL_MODE = "sandbox"  # Utilise "live" quand tu es en production
+PAYPAL_MODE = "sandbox"  # "live" quand tu es en production
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -95,10 +95,10 @@ WSGI_APPLICATION = 'mon_projet.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'biens',                      # Remplace par le nom de ta base
-        'USER': 'postgres',                   # Remplace par ton nom d'utilisateur PostgreSQL
-        'PASSWORD': 'user1234',               # Remplace par ton mot de passe PostgreSQL
-        'HOST': 'localhost',                  # Si tu utilises une base de données locale
+        'NAME': 'biens',                      # nom de ta base
+        'USER': 'postgres',                   # nom d'utilisateur PostgreSQL
+        'PASSWORD': 'user1234',               # mot de passe PostgreSQL
+        'HOST': 'localhost',                  
         'PORT': '5432',                       # Par défaut, PostgreSQL utilise le port 5432
     }
 }
