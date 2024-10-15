@@ -269,3 +269,6 @@ def review_create(request):
     else:
         form = ReviewForm()
     return render(request, 'your_template.html', {'form': form})
+
+def contacts(request):
+    return render(request, 'location_biens/contacts.html')

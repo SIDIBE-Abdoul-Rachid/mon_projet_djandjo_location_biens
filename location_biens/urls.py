@@ -2,6 +2,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from . import views
 from .views import (
     ajouter_bien,
     ajouter_avis,
@@ -32,4 +33,5 @@ urlpatterns = [
     path('bien/<int:bien_id>/ajouter-avis/', ajouter_avis, name='ajouter_avis'),
     path('avis/modifier/<int:avis_id>/', modifier_avis, name='modifier_avis'),
     path('avis/supprimer/<int:avis_id>/', supprimer_avis, name='supprimer_avis'),
+    path('contacts/', views.contacts, name='contacts'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
