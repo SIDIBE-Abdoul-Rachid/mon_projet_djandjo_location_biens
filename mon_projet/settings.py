@@ -15,6 +15,13 @@ import os
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = 'dashboard'
+STATIC_URL = '/static/'
+
+
+# settings.py
+PAYPAL_CLIENT_ID = "AWMNCU2Dc57bdToV3rujdPpeqhkn_HkR3K3KmuRFhyRNcRJzaCoUqcUMjiHFyUhOF4Lk1M2RbasthlfU"
+PAYPAL_CLIENT_SECRET = "EJKgIDdY8AB8GIrFgAtZyDYsrRgUOYb1qh2h_dM5pKnlrEzO2Dtqip47U80UIuPhviAqpelKtflXo8mN"
+PAYPAL_MODE = "sandbox"  # Utilise "live" quand tu es en production
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

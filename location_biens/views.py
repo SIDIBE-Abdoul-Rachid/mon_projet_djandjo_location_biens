@@ -10,6 +10,10 @@ from django.contrib import messages
 from .models import Avis
 from .forms import ReviewForm
 from .forms import AvisForm
+import paypalrestsdk
+from django.conf import settings
+from django.urls import reverse
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -272,3 +276,66 @@ def review_create(request):
 
 def contacts(request):
     return render(request, 'location_biens/contacts.html')
+
+
+# Configurer PayPal avec les informations d'identification
+paypalrestsdk.configure({
+  "mode": settings.PAYPAL_MODE,  # "sandbox" ou "live"
+  "client_id": settings.PAYPAL_CLIENT_ID,
+  "client_secret": settings.PAYPAL_CLIENT_SECRET
+})
+
+def reserver_bien_paypal(request, bien_id):
+    # Récupérer le bien à réserver
+    bien = get_object_or_404(Bien, id=bien_id)
+
+    if request.method == 'POST':
+        # Créer un paiement PayPal
+        paiement = paypalrestsdk.Payment({
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal"
+            },
+            "redirect_urls": {
+                "return_url": request.build_absolute_uri(reverse('reservation_success')),
+                "cancel_url": request.build_absolute_uri(reverse('reservation_cancel')),
+            },
+            "transactions": [{
+                "item_list": {
+                    "items": [{
+                        "name": bien.titre,
+                        "sku": "item",
+                        "price": str(bien.prix_par_jour),  # Assure-toi que le prix est bien un string
+                        "currency": "USD",  # Vérifie la devise
+                        "quantity": 1
+                    }]
+                },
+                "amount": {
+                    "total": str(bien.prix_par_jour),
+                    "currency": "USD"
+                },
+                "description": f"Réservation du bien {bien.titre}"
+            }]
+        })
+
+        # Exécuter le paiement
+        if paiement.create():
+            for lien in paiement.links:
+                if lien.rel == "approval_url":
+                    # Redirige vers PayPal pour l'approbation du paiement
+                    return redirect(lien.href)
+        else:
+            # Si le paiement échoue, affiche un message d'erreur
+            print(paiement.error)  # Pour des informations détaillées
+            return render(request, 'location_biens/payment_error.html')
+
+    # Affiche une page de confirmation de réservation
+    return render(request, 'location_biens/reserver_bien_paypal.html', {'bien': bien})
+
+
+
+def reservation_success(request):
+    return render(request, 'location_biens/reservation_success.html')
+
+def reservation_cancel(request):
+    return render(request, 'location_biens/reservation_cancel.html')

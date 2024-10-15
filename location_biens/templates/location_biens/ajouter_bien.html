@@ -1,41 +1,181 @@
-<!-- Formulaire d'ajout de bien immobilier amélioré et harmonisé -->
-<form method="post" enctype="multipart/form-data" class="p-4 bg-white shadow-sm rounded">
-    {% csrf_token %}
-    <h2 class="mb-4 text-center">Ajouter un nouveau bien immobilier</h2>
-    
-    <div class="form-group">
-        <label for="titre" class="font-weight-bold">Titre du bien :</label>
-        <input type="text" id="titre" name="titre" class="form-control" placeholder="Entrez le titre du bien" required>
-    </div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Bien Immobilier</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f7f9fc;
+            font-family: 'Roboto', sans-serif;
+            padding: 20px;
+        }
 
-    <div class="form-group">
-        <label for="description" class="font-weight-bold">Description :</label>
-        <textarea id="description" name="description" class="form-control" rows="4" placeholder="Décrivez le bien" required></textarea>
-    </div>
+        form {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 50px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
 
-    <div class="form-group">
-        <label for="prix_par_jour" class="font-weight-bold">Prix par jour (en F CFA) :</label>
-        <input type="number" id="prix_par_jour" name="prix_par_jour" class="form-control" placeholder="Montant par jour" required>
-    </div>
+        form:hover {
+            transform: scale(1.02);
+        }
 
-    <div class="form-group">
-        <label for="image" class="font-weight-bold">Télécharger une image :</label>
-        <div class="custom-file">
-            <input type="file" id="image" name="image" class="custom-file-input" accept="image/*" required>
-            <label class="custom-file-label" for="image">Choisir une image...</label>
+        h2 {
+            color: #007bff;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-control, .custom-file-input {
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            padding: 10px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus, .custom-file-input:focus {
+            border-color: #007bff;
+            box-shadow: none;
+        }
+
+        .custom-file-label {
+            cursor: pointer;
+            font-size: 14px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            transition: background-color 0.3s;
+        }
+
+        .custom-file-input:hover + .custom-file-label {
+            background-color: #e9ecef;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .invalid-feedback {
+            color: #e3342f;
+            font-size: 12px;
+        }
+
+        .img-thumbnail {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Formulaire d'ajout de bien immobilier amélioré et harmonisé -->
+    <form method="post" enctype="multipart/form-data" class="p-4 bg-white shadow-sm rounded" novalidate>
+        <h2 class="mb-4 text-center">Ajouter un nouveau bien</h2>
+        
+        <div class="form-group">
+            <label for="titre" class="font-weight-bold">Titre du bien :</label>
+            <input type="text" id="titre" name="titre" class="form-control" placeholder="Entrez le titre du bien" required aria-required="true">
+            <div class="invalid-feedback">
+                Veuillez entrer un titre pour le bien.
+            </div>
         </div>
-    </div>
 
-    <button type="submit" class="btn btn-primary btn-block mt-4">
-        <i class="fas fa-plus-circle"></i> Ajouter le bien
-    </button>
-</form>
+        <div class="form-group">
+            <label for="description" class="font-weight-bold">Description :</label>
+            <textarea id="description" name="description" class="form-control" rows="4" placeholder="Décrivez le bien" required aria-required="true"></textarea>
+            <div class="invalid-feedback">
+                Veuillez fournir une description du bien.
+            </div>
+        </div>
 
-<!-- Script to display file name in the custom file input -->
-<script>
-    document.querySelector('.custom-file-input').addEventListener('change', function(e){
-        var fileName = document.getElementById("image").files[0].name;
-        var nextSibling = e.target.nextElementSibling;
-        nextSibling.innerText = fileName;
-    });
-</script>
+        <div class="form-group">
+            <label for="prix_par_jour" class="font-weight-bold">Prix par jour (en F CFA) :</label>
+            <input type="number" id="prix_par_jour" name="prix_par_jour" class="form-control" placeholder="Montant par jour" required aria-required="true" min="0" step="0.01">
+            <div class="invalid-feedback">
+                Veuillez entrer un prix valide pour le bien.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="image" class="font-weight-bold">Télécharger une image :</label>
+            <div class="custom-file">
+                <input type="file" id="image" name="image" class="custom-file-input" accept="image/*" required aria-required="true">
+                <label class="custom-file-label" for="image">Choisir une image...</label>
+            </div>
+            <div class="mt-3">
+                <img id="preview" src="#" alt="Aperçu de l'image" class="img-thumbnail d-none" style="max-width: 300px;">
+            </div>
+            <div class="invalid-feedback">
+                Veuillez télécharger une image pour le bien.
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block mt-4">
+            <i class="fas fa-plus-circle"></i> Ajouter le bien
+        </button>
+    </form>
+
+    <!-- Script pour afficher le nom du fichier et l'aperçu de l'image -->
+    <script>
+        document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+            var fileName = document.getElementById("image").files[0].name;
+            var nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName;
+
+            // Affichage de l'aperçu de l'image
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var imgPreview = document.getElementById('preview');
+                imgPreview.src = e.target.result;
+                imgPreview.classList.remove('d-none');
+            }
+            reader.readAsDataURL(document.getElementById("image").files[0]);
+        });
+
+        // Validation des champs avec Bootstrap
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+
+</body>
+</html>

@@ -34,4 +34,8 @@ urlpatterns = [
     path('avis/modifier/<int:avis_id>/', modifier_avis, name='modifier_avis'),
     path('avis/supprimer/<int:avis_id>/', supprimer_avis, name='supprimer_avis'),
     path('contacts/', views.contacts, name='contacts'),
+    path('reserver-bien-paypal/<int:bien_id>/', views.reserver_bien_paypal, name='reserver_bien_paypal'),
+    path('reservation-success/', views.reservation_success, name='reservation_success'),
+    path('reservation-cancel/', views.reservation_cancel, name='reservation_cancel'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
